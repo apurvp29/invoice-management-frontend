@@ -12,11 +12,11 @@ export const routes: Routes = [
     children: [
       {
         path: '',
-        component: ClientComponent,
+        loadComponent: () => import('../app/client/client.component').then(m => m.ClientComponent)
       },
       {
         path: 'add-client',
-        component: AddClientComponent,
+        loadComponent: () => import('../app/add-client/add-client.component').then(m => m.AddClientComponent)
       },
     ],
   },
@@ -28,14 +28,14 @@ export const routes: Routes = [
     children: [
       {
         path: '',
-        component: InvoiceComponent,
+        loadComponent: () => import('../app/invoice/invoice.component').then(m => m.InvoiceComponent)
       },
       {
         path: 'edit-invoice',
         children: [
           {
             path: ':id',
-            component: InvoiceCreateComponent,
+            loadComponent: () => import('../app/invoice-o/invoice-create/invoice-create.component').then(m => m.InvoiceCreateComponent)
           },
         ],
       },
@@ -44,13 +44,13 @@ export const routes: Routes = [
         children: [
           {
             path: ':id',
-            component: InvoiceCreateComponent,
+            loadComponent: () => import('../app/invoice-o/invoice-create/invoice-create.component').then(m => m.InvoiceCreateComponent)
           },
         ],
       },
       {
         path: 'create-invoice',
-        component: InvoiceCreateComponent,
+        loadComponent: () => import('../app/invoice-o/invoice-create/invoice-create.component').then(m => m.InvoiceCreateComponent)
       },
     ],
   },
