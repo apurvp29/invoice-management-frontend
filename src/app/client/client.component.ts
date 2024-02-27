@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AgGridAngular } from 'ag-grid-angular';
-import { CellClickedEvent, ColDef, GridApi } from 'ag-grid-community';
+import { ColDef } from 'ag-grid-community';
 import {
-  Router,
   RouterLink,
   RouterLinkActive,
   RouterOutlet,
@@ -18,7 +17,7 @@ import { ApiService } from '../api.service';
   styleUrl: './client.component.css',
 })
 export class ClientComponent implements OnInit {
-  constructor(private router: Router, private apiService: ApiService) {}
+  constructor(private apiService: ApiService) {}
 
   allClients: ClientModel[] = [];
 
@@ -56,8 +55,6 @@ export class ClientComponent implements OnInit {
       },
     });
   }
-  gridApi!: GridApi;
-  onCellClicked(event: CellClickedEvent) {}
 
   colDefs: ColDef[] = [
     { field: 'Name' },

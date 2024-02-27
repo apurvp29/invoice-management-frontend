@@ -1,5 +1,4 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { ActionService } from '../action.service';
 import { ApiService } from '../api.service';
 
 @Component({
@@ -13,7 +12,6 @@ export class ConfirmComponent {
   @Output() visibilityChild = new EventEmitter<boolean>();
   @Input() invoiceId!: string;
   constructor(
-    private deleteService: ActionService,
     private apiService: ApiService
   ) {}
 
