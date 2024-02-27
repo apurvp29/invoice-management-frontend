@@ -1,0 +1,396 @@
+<div class="p-4 sm:ml-64">
+  <div
+    class="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700 mt-14 flex flex-col items-center"
+  >
+    <form [formGroup]="clientFormInformation" class="w-full xl:w-2/3 p-3">
+      <div>
+        <div
+          role="button"
+          class="flex justify-between items-center px-5"
+          (click)="onSelectTDropdown(1)"
+        >
+          <span class="text-lg font-semibold">Basic Information</span>
+          <svg
+            *ngIf="!tabs[0].open"
+            class="w-2.5 h-2.5 ms-3"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 10 6"
+          >
+            <path
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="m1 1 4 4 4-4"
+            />
+          </svg>
+          <svg
+            *ngIf="tabs[0].open"
+            class="w-6 h-6 text-gray-800 dark:text-white"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="-6.5 0 24 24"
+          >
+            <path
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="m16 14-4-4-4 4"
+            />
+          </svg>
+        </div>
+
+        <ng-container *ngIf="tabs[0].open" class="mb-2">
+          <div
+            class="flex flex-col lg:flex-row justify-between px-5 gap-4 mt-2"
+          >
+            <div class="flex flex-col lg:w-1/2 gap-1">
+              <label class="text-gray-500">Business Name</label>
+              <input
+                formControlName="businessName"
+                class="border border-gray-300 bg-gray-50 rounded-md"
+                type="text"
+              />
+              <span
+                *ngIf="(f.controls['businessName'].errors?.['required'] && (f.controls['businessName'].dirty || f.controls['businessName'].touched)) || (isAllValid && f.controls['businessName'].errors?.['required'])"
+                class="w-1/2 text-[12px] text-red-600 inline-block lg:hidden"
+                >Business name required*</span
+              >
+            </div>
+            <div class="flex flex-col lg:w-1/2 gap-1">
+              <label class="text-gray-500">Client Industry</label>
+              <input
+                formControlName="clientIndustry"
+                class="border border-gray-300 bg-gray-50 rounded-md"
+                type="text"
+              />
+              <span
+                *ngIf="(f.controls['clientIndustry'].errors?.['required'] && (f.controls['clientIndustry'].dirty || f.controls['clientIndustry'].touched)) || (isAllValid && f.controls['clientIndustry'].errors?.['required'])"
+                class="w-1/2 text-[12px] text-red-600 inline-block lg:hidden"
+                >Client industry required*</span
+              >
+            </div>
+          </div>
+          <div class="flex flex-col lg:flex-row justify-between px-5 gap-4">
+            <span
+              *ngIf="(f.controls['businessName'].errors?.['required'] && (f.controls['businessName'].dirty || f.controls['businessName'].touched)) || (isAllValid && f.controls['businessName'].errors?.['required'])"
+              class="hidden lg:inline-block w-1/2 text-[12px] text-red-600"
+              >Business name required*</span
+            >
+            <span
+              *ngIf="!((f.controls['businessName'].errors?.['required'] && (f.controls['businessName'].dirty || f.controls['businessName'].touched)) || (isAllValid && f.controls['businessName'].errors?.['required'])) && ((f.controls['clientIndustry'].errors?.['required'] && (f.controls['clientIndustry'].dirty || f.controls['clientIndustry'].touched)) || (isAllValid && f.controls['clientIndustry'].errors?.['required']))"
+              class="hidden lg:inline-block w-1/2"
+            >
+            </span>
+            <span
+              *ngIf="(f.controls['clientIndustry'].errors?.['required'] && (f.controls['clientIndustry'].dirty || f.controls['clientIndustry'].touched)) || (isAllValid && f.controls['clientIndustry'].errors?.['required'])"
+              class="hidden lg:inline-block w-1/2 text-[12px] text-red-600"
+              >Client industry required*</span
+            >
+          </div>
+          <div
+            class="flex flex-col lg:flex-row justify-between px-5 gap-4 mt-5"
+          >
+            <div class="flex flex-col lg:w-1/2 gap-1">
+              <label class="text-gray-500">Country</label>
+              <input
+                class="border border-gray-300 bg-gray-50 rounded-md"
+                type="text"
+              />
+            </div>
+            <div class="flex flex-col lg:w-1/2 gap-1">
+              <label class="text-gray-500">City</label>
+              <input
+                class="border border-gray-300 bg-gray-50 rounded-md"
+                type="text"
+              />
+            </div>
+          </div>
+        </ng-container>
+
+        <div
+          role="button"
+          class="flex justify-between items-center px-5 mt-6"
+          (click)="onSelectTDropdown(2)"
+        >
+          <span class="text-lg font-semibold">Tax Information</span>
+          <svg
+            *ngIf="!tabs[1].open"
+            class="w-2.5 h-2.5 ms-3"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 10 6"
+          >
+            <path
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="m1 1 4 4 4-4"
+            />
+          </svg>
+          <svg
+            *ngIf="tabs[1].open"
+            class="w-6 h-6 text-gray-800 dark:text-white"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="-6.5 0 24 24"
+          >
+            <path
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="m16 14-4-4-4 4"
+            />
+          </svg>
+        </div>
+
+        <ng-container *ngIf="tabs[1].open">
+          <div
+            class="flex flex-col lg:flex-row justify-between px-5 gap-4 mt-2"
+          >
+            <div class="flex flex-col lg:w-1/2 gap-1">
+              <label class="text-gray-500">Business GSTIN</label>
+              <input
+                formControlName="gstNumber"
+                class="border border-gray-300 bg-gray-50 rounded-md"
+                type="text"
+              />
+              <span
+                *ngIf="((f.controls['gstNumber'].errors?.['pattern']) && (f.controls['gstNumber'].dirty || f.controls['gstNumber'].touched)) || (isAllValid && f.controls['gstNumber'].errors?.['pattern'])"
+                class="w-1/2 text-[12px] text-red-600 inline-block lg:hidden"
+                >Invalid GST number*</span
+              >
+              <span
+                *ngIf="((f.controls['gstNumber'].errors?.['required']) && (f.controls['gstNumber'].dirty || f.controls['gstNumber'].touched)) || (isAllValid && f.controls['gstNumber'].errors?.['required'])"
+                class="w-1/2 text-[12px] text-red-600 inline-block lg:hidden"
+                >GST number required*</span
+              >
+            </div>
+            <div class="flex flex-col lg:w-1/2 gap-1">
+              <label class="text-gray-500">Business PAN Number</label>
+              <input
+                formControlName="panNumber"
+                class="border border-gray-300 bg-gray-50 rounded-md"
+                type="text"
+              />
+              <span
+                *ngIf="(f.controls['panNumber'].errors?.['required'] && (f.controls['panNumber'].dirty || f.controls['panNumber'].touched)) || (isAllValid && f.controls['panNumber'].errors?.['required'])"
+                class="w-1/2 text-[12px] text-red-600 inline-block lg:hidden"
+                >PAN number required*</span
+              >
+              <span
+                *ngIf="(f.controls['panNumber'].errors?.['pattern'] && (f.controls['panNumber'].dirty || f.controls['panNumber'].touched)) || (isAllValid && f.controls['panNumber'].errors?.['pattern'])"
+                class="w-1/2 text-[12px] text-red-600 inline-block lg:hidden"
+                >Invalid PAN number*</span
+              >
+            </div>
+          </div>
+          <div class="flex flex-col lg:flex-row justify-between px-5 gap-4">
+            <span
+              *ngIf="(f.controls['gstNumber'].errors?.['required'] && (f.controls['gstNumber'].dirty || f.controls['gstNumber'].touched)) || (isAllValid && f.controls['gstNumber'].errors?.['required'])"
+              class="hidden lg:inline-block w-1/2 text-[12px] text-red-600"
+              >GST number required*</span
+            >
+            <span
+              *ngIf="((f.controls['gstNumber'].errors?.['pattern']) && (f.controls['gstNumber'].dirty || f.controls['gstNumber'].touched))"
+              class="w-1/2 text-[12px] text-red-600 hidden lg:inline-block"
+              >Invalid GST number*</span
+            >
+            <span
+              *ngIf="!(((f.controls['gstNumber'].errors?.['required'] || f.controls['gstNumber'].errors?.['pattern']) && (f.controls['gstNumber'].dirty || f.controls['gstNumber'].touched)) || (isAllValid && f.controls['gstNumber'].errors?.['required'])) && (((f.controls['panNumber'].errors?.['required'] || f.controls['panNumber'].errors?.['pattern']) && (f.controls['panNumber'].dirty || f.controls['panNumber'].touched)) || (isAllValid && f.controls['panNumber'].errors?.['required']))"
+              class="hidden lg:inline-block w-1/2"
+            >
+            </span>
+            <span
+              *ngIf="(f.controls['panNumber'].errors?.['required'] && (f.controls['panNumber'].dirty || f.controls['panNumber'].touched)) || (isAllValid && f.controls['panNumber'].errors?.['required'])"
+              class="hidden lg:inline-block w-1/2 text-[12px] text-red-600"
+              >PAN number required*</span
+            >
+            <span
+              *ngIf="(f.controls['panNumber'].errors?.['pattern'] && (f.controls['panNumber'].dirty || f.controls['panNumber'].touched))"
+              class="w-1/2 text-[12px] text-red-600 hidden lg:inline-block"
+              >Invalid PAN number*</span
+            >
+          </div>
+          <div class="px-5 mt-2">
+            <p class="text-gray-500 my-3">Client Type</p>
+            <div class="flex gap-11">
+              <div class="flex items-center me-4">
+                <input
+                  checked
+                  id="individual"
+                  type="radio"
+                  value=""
+                  name="company-type"
+                  class="w-4 h-4 text-[#16579D] bg-gray-100 border-gray-300 focus:ring-[#16579D] dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                  (change)="clientType = 'INDIVISUAL'"
+                />
+                <label
+                  for="individual"
+                  class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                  >Individual</label
+                >
+              </div>
+              <div class="flex items-center me-4">
+                <input
+                  id="company"
+                  type="radio"
+                  value=""
+                  name="company-type"
+                  class="w-4 h-4 text-[#16579D] bg-gray-100 border-gray-300 focus:ring-[#16579D] dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                  (change)="clientType = 'COMPANY'"
+                />
+                <label
+                  for="company"
+                  class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                  >Company</label
+                >
+              </div>
+            </div>
+            <div class="flex flex-col mt-5 gap-1">
+              <label for="tax-treatment" class="text-gray-500"
+                >Tax Treatment</label
+              >
+              <select
+                id="tax-treatment"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              >
+                <option selected>Consumer</option>
+                <option value="B2B">Unregistered B2B</option>
+              </select>
+            </div>
+          </div>
+        </ng-container>
+
+        <div
+          role="button"
+          class="flex justify-between items-center px-5 mt-6 mb-2"
+          (click)="onSelectTDropdown(5)"
+        >
+          <span class="text-lg font-semibold">Additional Details</span>
+          <svg
+            *ngIf="!tabs[4].open"
+            class="w-2.5 h-2.5 ms-3"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 10 6"
+          >
+            <path
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="m1 1 4 4 4-4"
+            />
+          </svg>
+          <svg
+            *ngIf="tabs[4].open"
+            class="w-6 h-6 text-gray-800 dark:text-white"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="-6.5 0 24 24"
+          >
+            <path
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="m16 14-4-4-4 4"
+            />
+          </svg>
+        </div>
+
+        <ng-container *ngIf="tabs[4].open">
+          <div class="flex flex-col px-5 w-full">
+            <label for="nickname" class="text-gray-500 mb-1"
+              >Business Alias (Nick Name)
+            </label>
+            <input
+              id="nickname"
+              formControlName="alias"
+              class="border border-gray-300 bg-gray-50 rounded-md"
+              type="text"
+            />
+          </div>
+          <div
+            class="flex flex-col lg:flex-row justify-between px-5 gap-4 mt-5"
+          >
+            <div class="flex flex-col lg:w-1/2 gap-1">
+              <label for="email" class="text-gray-500">Email</label>
+              <input
+                formControlName="email"
+                id="email"
+                class="border border-gray-300 bg-gray-50 rounded-md"
+                type="text"
+              />
+              <span
+                *ngIf="(f.controls['email'].errors?.['required'] && (f.controls['email'].dirty || f.controls['email'].touched)) || (isAllValid && f.controls['email'].errors?.['required'])"
+                class="w-1/2 text-[12px] text-red-600 inline-block lg:hidden"
+                >E-mail required*</span
+              >
+              <span
+                *ngIf="(f.controls['email'].errors?.['email'] && (f.controls['email'].dirty || f.controls['email'].touched))"
+                class="w-1/2 text-[12px] text-red-600 inline-block lg:hidden"
+                >Invalid E-mail*</span
+              >
+            </div>
+            <div class="flex flex-col lg:w-1/2 gap-1">
+              <label for="phone" class="text-gray-500">Phone Number</label>
+              <input
+                formControlName="phone"
+                id="phone"
+                class="border border-gray-300 bg-gray-50 rounded-md"
+                type="text"
+              />
+              <span
+                *ngIf="(f.controls['phone'].errors?.['required'] && (f.controls['phone'].dirty || f.controls['phone'].touched)) || (isAllValid && f.controls['phone'].errors?.['required'])"
+                class="w-1/2 text-[12px] text-red-600 inline-block lg:hidden"
+                >Phone number required*</span
+              >
+            </div>
+          </div>
+          <div class="flex flex-col lg:flex-row justify-between px-5 gap-4">
+            <span
+              *ngIf="(f.controls['email'].errors?.['required'] && (f.controls['email'].dirty || f.controls['email'].touched)) || (isAllValid && f.controls['email'].errors?.['required'])"
+              class="hidden lg:inline-block w-1/2 text-[12px] text-red-600"
+              >E-mail required*</span
+            >
+            <span
+              *ngIf="(f.controls['email'].errors?.['email'] && (f.controls['email'].dirty || f.controls['email'].touched))"
+              class="hidden lg:inline-block w-1/2 text-[12px] text-red-600"
+              >Invalid E-mail*</span
+            >
+            <span
+              *ngIf="!(((f.controls['email'].errors?.['required'] || f.controls['email'].errors?.['email']) && (f.controls['email'].dirty || f.controls['email'].touched)) || (isAllValid && f.controls['email'].errors?.['required'])) && ((f.controls['phone'].errors?.['required'] && (f.controls['phone'].dirty || f.controls['phone'].touched)) || (isAllValid && f.controls['phone'].errors?.['required']))"
+              class="hidden lg:inline-block w-1/2"
+            >
+            </span>
+            <span
+              *ngIf="(f.controls['phone'].errors?.['required'] && (f.controls['phone'].dirty || f.controls['phone'].touched)) || (isAllValid && f.controls['phone'].errors?.['required'])"
+              class="hidden lg:inline-block w-1/2 text-[12px] text-red-600"
+              >Phone number required*</span
+            >
+          </div>
+        </ng-container>
+
+        <button
+          type="button"
+          class="mx-5 my-6 text-white bg-[#16579D] hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-md text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+          (click)="onCreateClient()"
+        >
+          Save
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

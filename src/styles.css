@@ -1,1 +1,22 @@
-/* You can add global styles to this file, and also import other style files */
+@import 'ag-grid-community/styles/ag-theme-material.css';
+@import 'ag-grid-community/styles/ag-theme-balham.css';
+@import 'ag-grid-community/styles/ag-theme-quartz.css';
+@import 'ag-grid-community/styles/ag-theme-alpine.css';
+@import 'ag-grid-community/styles/ag-grid.css';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+* {
+  font-family: Inter, sans-serif;
+}
+
+.ag-theme-quartz {
+  --ag-header-background-color: #ddd;
+  --ag-header-height: 40px;
+  --ag-background-color: #FFFFFF;
+  --ag-font-size: 14px;
+  --ag-font-color: #FFFFFF;
+}
+

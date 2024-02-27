@@ -1,0 +1,119 @@
+<aside
+  id="logo-sidebar"
+  class="fixed top-0 left-0 z-40 w-64 h-screen pt-20 transition-transform -translate-x-full bg-white border-r border-gray-200 sm:translate-x-0 dark:bg-gray-800 dark:border-gray-700"
+  aria-label="Sidebar"
+>
+  <div class="h-full px-3 pb-4 overflow-y-auto bg-white dark:bg-gray-800">
+    <ul class="space-y-2 font-medium">
+      <li>
+        <a
+          routerLink="/dashboard"
+          routerLinkActive="active"
+          ariaCurrentWhenActive="page"
+          #dash="routerLinkActive"
+          class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+          [ngStyle]="{
+            'background-color': dash.isActive ? '#16579D' : '',
+            color: dash.isActive ? '#ffffff' : '#111111'
+          }"
+        >
+          <svg
+            class="w-5 h-5 text-inherit transition duration-75 dark:text-gray-400 group-hover:text-inherit dark:group-hover:text-white"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="currentColor"
+            viewBox="0 0 22 21"
+          >
+            <path
+              d="M16.975 11H10V4.025a1 1 0 0 0-1.066-.998 8.5 8.5 0 1 0 9.039 9.039.999.999 0 0 0-1-1.066h.002Z"
+            />
+            <path
+              d="M12.5 0c-.157 0-.311.01-.565.027A1 1 0 0 0 11 1.02V10h8.975a1 1 0 0 0 1-.935c.013-.188.028-.374.028-.565A8.51 8.51 0 0 0 12.5 0Z"
+            />
+          </svg>
+          <span class="ms-3">Dashboard</span>
+        </a>
+      </li>
+      <li>
+        <a
+          routerLink="/client"
+          routerLinkActive="active"
+          ariaCurrentWhenActive="page"
+          #cli="routerLinkActive"
+          class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+          [ngStyle]="{
+            'background-color': cli.isActive ? '#16579D' : '',
+            color: cli.isActive ? '#ffffff' : '#111111'
+          }"
+        >
+          <svg
+            class="flex-shrink-0 w-5 h-5 text-inherit transition duration-75 dark:text-gray-400 group-hover:text-inherit dark:group-hover:text-white"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="currentColor"
+            viewBox="0 0 20 18"
+          >
+            <path
+              d="M14 2a3.963 3.963 0 0 0-1.4.267 6.439 6.439 0 0 1-1.331 6.638A4 4 0 1 0 14 2Zm1 9h-1.264A6.957 6.957 0 0 1 15 15v2a2.97 2.97 0 0 1-.184 1H19a1 1 0 0 0 1-1v-1a5.006 5.006 0 0 0-5-5ZM6.5 9a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9ZM8 10H5a5.006 5.006 0 0 0-5 5v2a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-2a5.006 5.006 0 0 0-5-5Z"
+            />
+          </svg>
+          <span class="flex-1 ms-3 whitespace-nowrap">Clients</span>
+        </a>
+      </li>
+      <li>
+        <a
+          routerLink="/invoice"
+          routerLinkActive="active"
+          ariaCurrentWhenActive="page"
+          #inv="routerLinkActive"
+          class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+          [ngStyle]="{
+            'background-color': inv.isActive ? '#16579D' : '',
+            color: inv.isActive ? '#ffffff' : '#111111'
+          }"
+        >
+          <svg
+            class="flex-shrink-0 w-5 h-5 text-inherit transition duration-75 dark:text-gray-400 group-hover:text-inherit dark:group-hover:text-white"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="currentColor"
+            viewBox="4 0 18 20"
+          >
+            <path
+              d="M9 2.2V7H4.2l.4-.5 3.9-4 .5-.3Zm2-.2v5a2 2 0 0 1-2 2H4v11c0 1.1.9 2 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2h-7ZM8 16c0-.6.4-1 1-1h6a1 1 0 1 1 0 2H9a1 1 0 0 1-1-1Zm1-5a1 1 0 1 0 0 2h6a1 1 0 1 0 0-2H9Z"
+            />
+          </svg>
+          <span class="flex-1 ms-3 whitespace-nowrap">Invoice</span>
+        </a>
+      </li>
+      <li>
+        <a
+          routerLink="/invoice-o"
+          routerLinkActive="active"
+          ariaCurrentWhenActive="page"
+          #rla="routerLinkActive"
+          class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+          [ngStyle]="{
+            'background-color': rla.isActive ? '#16579D' : '',
+            color: rla.isActive ? '#ffffff' : '#111111'
+          }"
+        >
+          <svg
+            class="flex-shrink-0 w-5 h-5 text-inherit transition duration-75 dark:text-gray-400 group-hover:text-inherit dark:group-hover:text-white"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="currentColor"
+            viewBox="4 0 18 20"
+          >
+            <path
+              d="M9 2.2V7H4.2l.4-.5 3.9-4 .5-.3Zm2-.2v5a2 2 0 0 1-2 2H4v11c0 1.1.9 2 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2h-7ZM8 16c0-.6.4-1 1-1h6a1 1 0 1 1 0 2H9a1 1 0 0 1-1-1Zm1-5a1 1 0 1 0 0 2h6a1 1 0 1 0 0-2H9Z"
+            />
+          </svg>
+          <span class="flex-1 ms-3 whitespace-nowrap text-inherit"
+            >Invoice-o</span
+          >
+        </a>
+      </li>
+    </ul>
+  </div>
+</aside>

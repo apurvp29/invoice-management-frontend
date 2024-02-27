@@ -1,14 +1,18 @@
-import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute, Router, RouterLink, RouterLinkActive} from '@angular/router';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {ApiService} from '../api.service';
-import {NgForOf, NgIf} from '@angular/common';
-import {ClientModel} from '../../model/ClientModel';
-import {BusinessModel} from '../../model/BusinessModel';
-import {InvoiceModel} from '../../model/InvoiceModel';
-import {ActionService} from "../action.service";
-import {InvoiceDataModel} from "../../model/InvoiceDataModel";
-import {InvoiceDetailModel} from "../../model/InvoiceDetailModel";
+import { Component, OnInit } from '@angular/core';
+import {
+  ActivatedRoute,
+  Router,
+  RouterLink,
+  RouterLinkActive,
+} from '@angular/router';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ApiService } from '../api.service';
+import { NgForOf, NgIf } from '@angular/common';
+import { ClientModel } from '../../model/ClientModel';
+import { BusinessModel } from '../../model/BusinessModel';
+import { InvoiceModel } from '../../model/InvoiceModel';
+import { InvoiceDataModel } from '../../model/InvoiceDataModel';
+import { InvoiceDetailModel } from '../../model/InvoiceDetailModel';
 
 @Component({
   selector: 'app-create-invoice',
@@ -25,15 +29,12 @@ import {InvoiceDetailModel} from "../../model/InvoiceDetailModel";
   styleUrl: './create-invoice.component.css',
 })
 export class CreateInvoiceComponent implements OnInit {
-  invoiceId: string = "";
+  invoiceId: string = '';
   constructor(
     private apiService: ApiService,
     private router: ActivatedRoute,
     private route: Router
-  ) {
-
-  }
-
+  ) {}
 
   invoiceNumber: string | undefined;
   invoiceDate: Date | undefined;
@@ -77,26 +78,36 @@ export class CreateInvoiceComponent implements OnInit {
         this.allInvoices = value.data;
         this.router.params.subscribe((params) => {
           this.invoiceId = params['id'];
-          if(this.invoiceId) {
+          if (this.invoiceId) {
             this.apiService.getInvoiceDetail(this.invoiceId).subscribe({
-              next: value => {
+              next: (value) => {
                 this.currentInvoiceDetail = value;
-                this.numOfItems = this.currentInvoiceDetail.data.itemsInvoice.length;
-                this.totalAmount = this.currentInvoiceDetail.data.totalAmount
-                for (let i = 0; i < this.currentInvoiceDetail.data.itemsInvoice.length; i++) {
-                  this.itemName[i] = this.currentInvoiceDetail.data.itemsInvoice[i].itemName;
-                  this.quantity[i] = this.currentInvoiceDetail.data.itemsInvoice[i].quantity;
-                  this.rate[i] = this.currentInvoiceDetail.data.itemsInvoice[i].rate;
+                this.numOfItems =
+                  this.currentInvoiceDetail.data.itemsInvoice.length;
+                this.totalAmount = this.currentInvoiceDetail.data.totalAmount;
+                for (
+                  let i = 0;
+                  i < this.currentInvoiceDetail.data.itemsInvoice.length;
+                  i++
+                ) {
+                  this.itemName[i] =
+                    this.currentInvoiceDetail.data.itemsInvoice[i].itemName;
+                  this.quantity[i] =
+                    this.currentInvoiceDetail.data.itemsInvoice[i].quantity;
+                  this.rate[i] =
+                    this.currentInvoiceDetail.data.itemsInvoice[i].rate;
                   this.amount[i] = this.rate[i] * this.quantity[i];
-                  this.itemId[i] = this.currentInvoiceDetail.data.itemsInvoice[i].invoiceItemsId;
+                  this.itemId[i] =
+                    this.currentInvoiceDetail.data.itemsInvoice[
+                      i
+                    ].invoiceItemsId;
                 }
-              }
-            })
+              },
+            });
 
             for (let i = 0; i < this.allInvoices.length; i++) {
-              if(this.allInvoices[i]['invoiceId'] === this.invoiceId) {
+              if (this.allInvoices[i]['invoiceId'] === this.invoiceId) {
                 this.currentInvoice = this.allInvoices[i];
-                console.log(this.currentInvoice)
                 break;
               }
             }
@@ -107,14 +118,12 @@ export class CreateInvoiceComponent implements OnInit {
               }
             }
           }
-        })
-        this.router.queryParams.subscribe(query => {
+        });
+        this.router.queryParams.subscribe((query) => {
           this.viewOnly = query['view'];
-          console.log(this.viewOnly)
-        })
+        });
       },
-      error: (err) => {
-      },
+      error: (err) => {},
     });
   }
 
@@ -128,7 +137,6 @@ export class CreateInvoiceComponent implements OnInit {
   }
 
   checkValidInvoiceNumber() {
-    console.log('changed');
     for (let invoice of this.allInvoices) {
       if (this.invoiceNumber === invoice['invoiceNumber']) {
         this.showInvalidNumber = true;
@@ -171,67 +179,80 @@ export class CreateInvoiceComponent implements OnInit {
     this.numOfItems--;
   }
 
-
   onUpdate() {
     const value = {
       invoiceId: this.invoiceId,
       invoiceDate: new Date(this.invoiceDate!),
       dueDate: new Date(this.invoiceDueDate!),
-    }
+    };
     this.apiService.updateInvoice(value).subscribe({
-      next: value => {
+      next: (value) => {
         let set = new Set<number>();
-        for(let i = 0; i < this.itemId.length; i++) {
-          for (let j = 0; j < this.currentInvoiceDetail!.data.itemsInvoice.length; j++) {
-            if(this.itemId[i] === this.currentInvoiceDetail!.data.itemsInvoice[j].invoiceItemsId) {
+        for (let i = 0; i < this.itemId.length; i++) {
+          for (
+            let j = 0;
+            j < this.currentInvoiceDetail!.data.itemsInvoice.length;
+            j++
+          ) {
+            if (
+              this.itemId[i] ===
+              this.currentInvoiceDetail!.data.itemsInvoice[j].invoiceItemsId
+            ) {
               set.add(i);
               const payload = {
                 itemName: this.itemName[i],
                 quantity: this.quantity[i],
-                rate: Number(this.rate[i])
-              }
-              this.apiService.updateInvoiceItem(this.itemId[i], payload).subscribe({
-                next: value => {
-                  console.log(value);
-                }
-              })
+                rate: Number(this.rate[i]),
+              };
+              this.apiService
+                .updateInvoiceItem(this.itemId[i], payload)
+                .subscribe({
+                  next: (value) => {},
+                });
               break;
             }
           }
-
         }
 
-        for(let i = 0; i < this.currentInvoiceDetail!.data.itemsInvoice.length; i++) {
+        for (
+          let i = 0;
+          i < this.currentInvoiceDetail!.data.itemsInvoice.length;
+          i++
+        ) {
           let isPresent = false;
           for (let j = 0; j < this.itemId.length; j++) {
-            if(this.itemId[j] === this.currentInvoiceDetail!.data.itemsInvoice[i].invoiceItemsId) {
+            if (
+              this.itemId[j] ===
+              this.currentInvoiceDetail!.data.itemsInvoice[i].invoiceItemsId
+            ) {
               isPresent = true;
               break;
             }
           }
-          if(!isPresent) {
-            this.apiService.deleteInvoiceItem(this.currentInvoiceDetail!.data.itemsInvoice[i].invoiceItemsId).subscribe({
-              next: val => {
-                console.log(val);
-              }
-            })
+          if (!isPresent) {
+            this.apiService
+              .deleteInvoiceItem(
+                this.currentInvoiceDetail!.data.itemsInvoice[i].invoiceItemsId
+              )
+              .subscribe({
+                next: (val) => {},
+              });
           }
         }
 
-        for(let i = 0; i < this.itemName.length; i++) {
-          if(!set.has(i)) {
+        for (let i = 0; i < this.itemName.length; i++) {
+          if (!set.has(i)) {
             const payload = {
               itemName: this.itemName[i],
               quantity: this.quantity[i],
-              rate: this.rate[i]
-            }
+              rate: this.rate[i],
+            };
             this.apiService.createInvoiceItems(payload, this.invoiceId);
           }
         }
       },
-      error: err => {
-      }
-    })
+      error: (err) => {},
+    });
   }
 
   onSubmit() {
@@ -242,7 +263,7 @@ export class CreateInvoiceComponent implements OnInit {
       billedTo: this.clientObj?.clientId!,
       billedBy: this.businessObj?.businessId!,
     };
-    console.log(invoiceDetail, "onSubmit")
+
     this.apiService.createInvoice(invoiceDetail).subscribe({
       next: (value) => {
         if (value.code === 201) {
@@ -252,13 +273,12 @@ export class CreateInvoiceComponent implements OnInit {
               quantity: this.quantity[i],
               rate: this.rate[i],
             };
-            console.log(item, "onSubmit Item")
+
             this.apiService.createInvoiceItems(item, value.data.invoiceId);
           }
           this.route.navigate(['/invoice']);
         }
       },
     });
-    console.log("hello");
   }
 }
