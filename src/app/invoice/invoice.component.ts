@@ -6,7 +6,6 @@ import { AgGridAngular } from 'ag-grid-angular';
 import {
   CellClickedEvent,
   ColDef,
-  NewValueParams,
   SizeColumnsToContentStrategy,
   ValueFormatterParams,
 } from 'ag-grid-community';

@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../api.service';
 import { ResponseModel } from '../../model/ResponseModel';
-import { NgForOf, NgOptimizedImage } from '@angular/common';
+import { NgForOf } from '@angular/common';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [NgForOf, NgOptimizedImage],
+  imports: [NgForOf],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css',
 })

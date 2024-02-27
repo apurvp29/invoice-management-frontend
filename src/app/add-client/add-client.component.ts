@@ -30,7 +30,7 @@ export class AddClientComponent {
   clientFormInformation: FormGroup;
   isAllValid: boolean = false;
 
-  constructor(private apiService: ApiService, private fb: FormBuilder) {
+  constructor(private apiService: ApiService, fb: FormBuilder) {
     this.clientFormInformation = fb.group({
       businessName: ['', Validators.required],
       clientIndustry: ['', Validators.required],
@@ -124,5 +124,9 @@ export class AddClientComponent {
       nickName: this.f.value['alias'],
       phone: this.f.value['phone'],
     };
+    this.apiService.createClient(payload).subscribe({
+      next: value => {},
+      error: err => {}
+    })
   }
 }
