@@ -1,9 +1,5 @@
 import { Routes } from '@angular/router';
 import { DashboardComponent } from './dashboard/dashboard.component';
-import { ClientComponent } from './client/client.component';
-import { InvoiceComponent } from './invoice/invoice.component';
-import { AddClientComponent } from './add-client/add-client.component';
-import { InvoiceCreateComponent } from './invoice-o/invoice-create/invoice-create.component';
 
 export const routes: Routes = [
   { path: 'dashboard', component: DashboardComponent },
@@ -22,7 +18,6 @@ export const routes: Routes = [
   },
 
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
-  { path: 'create-invoice', component: InvoiceCreateComponent },
   {
     path: 'invoice',
     children: [
