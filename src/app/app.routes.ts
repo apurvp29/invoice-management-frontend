@@ -1,8 +1,10 @@
 import { Routes } from '@angular/router';
-import { DashboardComponent } from './dashboard/dashboard.component';
 
 export const routes: Routes = [
-  { path: 'dashboard', component: DashboardComponent },
+  {
+    path: 'dashboard',
+    loadComponent: () => import('../app/dashboard/dashboard.component').then(m => m.DashboardComponent)
+  },
   {
     path: 'client',
     children: [
