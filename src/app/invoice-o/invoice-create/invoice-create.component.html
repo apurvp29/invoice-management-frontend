@@ -332,14 +332,79 @@
           Add Item
         </button>
       </div>
-      <div class="mt-10 flex justify-end">
-        <div class="flex flex-col p-4 items-end w-[50%]">
+
+      <div class="flex flex-col justify-end items-end mt-6 px-4 md:px-0">
+        <div formArrayName="taxes" class="w-full md:w-1/2 lg:w-1/3 mt-3">
+          <span *ngIf="viewOnly" class="text-gray-500">Taxes:</span>
+          <ng-container *ngFor="let tax of fArrayTaxes.controls; let i = index">
+            <div [formGroupName]="i">
+              <div class="flex w-full justify-between mt-1">
+                <span class="w-1/3 inline-block">
+                  <input
+                    type="text"
+                    formControlName="taxName"
+                    [readOnly]="viewOnly"
+                    placeholder="Name"
+                    class="w-full border-b border-t-0 border-x-0 focus:border-x-transparent focus:border-t-transparent focus:ring-0 p-0 text-sm"
+                  >
+                </span>
+                <span class="w-[40%] flex flex-row items-center">
+                  <input
+                    type="text"
+                    [readOnly]="viewOnly"
+                    (input)="updateAmount()"
+                    formControlName="taxPercentage"
+                    placeholder="Amount"
+                    class="w-full border-b border-t-0 border-x-0 focus:border-x-transparent focus:border-t-transparent focus:ring-0 p-0 text-sm"
+                  ><span class="inline-block text-sm">%</span>
+                </span>
+                <span class="flex items-center">
+                  <button
+                    *ngIf="!viewOnly"
+                    class="inline-block"
+                    (click)="onRemoveTax(i)"
+                  >
+                  <svg
+                    class="w-5 h-5 text-gray-800 dark:text-white"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M6 18 18 6m0 12L6 6"
+                    />
+                  </svg>
+                </button>
+                </span>
+              </div>
+              <div class="flex w-full gap-5 mt-1">
+                <span
+                  *ngIf="((fGroupTaxes(i).controls['taxName'].errors?.['required']) && (fGroupTaxes(i).controls['taxName'].dirty || fGroupTaxes(i).controls['taxName'].touched)) || (isAllValid && ((fGroupTaxes(i).controls['taxName'].errors?.['required'])))"
+                  class="text-[12px] text-red-600 inline-block"
+                >
+                  Name required*
+                </span>
+                <span
+                  *ngIf="((fGroupTaxes(i).controls['taxPercentage'].errors?.['required']) && (fGroupTaxes(i).controls['taxPercentage'].dirty || fGroupTaxes(i).controls['taxPercentage'].touched)) || (isAllValid && ((fGroupTaxes(i).controls['taxPercentage'].errors?.['required'])))"
+                  class="text-[12px] text-red-600 inline-block"
+                >
+                  Amount required*
+                </span>
+              </div>
+            </div>
+          </ng-container>
           <button
             *ngIf="!viewOnly"
-            class="ml-4 mb-5 inline-flex items-center gap-1 border border-gray-500 rounded-[4px] border-dashed p-3 mt-6"
+            class="inline-flex items-center gap-1 border border-gray-500 rounded-[4px] border-dashed px-2 py-1 mt-2 text-sm"
+            (click)="onAddTaxes()"
           >
             <svg
-              class="w-6 h-6 text-gray-800 dark:text-white"
+              class="w-4 h-4 text-gray-800 dark:text-white"
               aria-hidden="true"
               xmlns="http://www.w3.org/2000/svg"
               fill="currentColor"
@@ -353,36 +418,19 @@
             </svg>
             Add Tax
           </button>
-          <div class="flex justify-between w-[80%] items-center mb-2">
-            <span class="inline-block text-sm">SGST</span>
-            <span class="inline-block w-1/2">
-              <input
-                type="text"
-                class="w-full border-b border-t-0 border-x-0 focus:border-x-transparent focus:border-t-transparent focus:ring-0 p-0"
-              />
-            </span>
-          </div>
-          <div class="flex justify-between mb-6 w-[80%] items-center">
-            <span class="inline-block text-sm">CGST</span>
-            <span class="inline-block w-1/2">
-              <input
-                type="text"
-                class="w-full border-b border-t-0 border-x-0 focus:border-x-transparent focus:border-t-transparent focus:ring-0 p-0"
-              />
-            </span>
-          </div>
-          <div
-            class="font-bold text-3xl text-right border-y border-y-gray-300 flex justify-between py-2 text-gray-500 w-full"
-          >
-            <span class="inline-block">Total (INR) </span>
-            <span class="inline-block">₹{{ this.totalAmount }}</span>
-          </div>
+        </div>
+        <div
+          class="mt-5 font-bold md:text-xl lg:text-2xl text-right border-y border-y-gray-300 flex justify-between py-2 text-gray-500 w-full md:w-2/3 lg:w-[40%]"
+        >
+          <span class="inline-block">Total (INR) </span>
+          <span class="inline-block">₹{{ this.totalAmount.toFixed(2) }}</span>
         </div>
       </div>
-      <div class="text-center mt-12">
+
+      <div class="flex flex-col sm:flex-row gap-3 mt-12 justify-center mx-5">
         <button
           type="button"
-          *ngIf="!currentInvoice"
+          *ngIf="!currentInvoice && !viewOnly"
           class="px-5 py-2.5 text-md font-medium disabled:opacity-75 text-white bg-[#16579D] hover:bg-[#033360] disabled:bg-gray-400 disabled:hover:cursor-not-allowed focus:ring-4 focus:outline-none focus:ring-violet-300 rounded-lg text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
           (click)="onSubmit()"
         >
@@ -399,10 +447,20 @@
         <button
           *ngIf="viewOnly"
           type="button"
-          class="px-5 py-2.5 text-md font-medium disabled:opacity-75 text-white bg-[#16579D] hover:bg-[#033360] disabled:bg-gray-400 disabled:hover:cursor-not-allowed focus:ring-4 focus:outline-none focus:ring-violet-300 rounded-lg text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+          class="px-5 py-2.5 text-[14px] disabled:opacity-75 text-white bg-[#16579D] hover:bg-[#033360] disabled:bg-gray-400 disabled:hover:cursor-not-allowed focus:ring-4 focus:outline-none focus:ring-violet-300 rounded-lg text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
           (click)="onDownload()"
         >
           Download
+        </button>
+
+        <button
+          *ngIf="viewOnly"
+          type="button"
+          class="flex items-center justify-center gap-2 px-5 py-2.5 text-[14px] disabled:opacity-75 bg-black text-white border border-dashed border-black disabled:bg-gray-400 disabled:hover:cursor-not-allowed focus:ring-4 focus:outline-none focus:ring-violet-300 rounded-lg text-center "
+          (click)="sendMessage()"
+        >
+          <img ngSrc="../../../assets/whatsapp-logo.svg" alt="file" height="15" width="15">
+          Send Via Whatsapp
         </button>
       </div>
     </form>

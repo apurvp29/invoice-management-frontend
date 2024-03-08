@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { AgGridAngular } from 'ag-grid-angular';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import {Router, RouterLink, RouterLinkActive} from '@angular/router';
 import { NgIf } from '@angular/common';
 import {
   FormBuilder,
@@ -30,7 +30,11 @@ export class AddClientComponent {
   clientFormInformation: FormGroup;
   isAllValid: boolean = false;
 
-  constructor(private apiService: ApiService, fb: FormBuilder) {
+  constructor(
+    private apiService: ApiService,
+    fb: FormBuilder,
+    private route: Router
+  ) {
     this.clientFormInformation = fb.group({
       businessName: ['', Validators.required],
       clientIndustry: ['', Validators.required],
@@ -125,7 +129,9 @@ export class AddClientComponent {
       phone: this.f.value['phone'],
     };
     this.apiService.createClient(payload).subscribe({
-      next: value => {},
+      next: value => {
+        this.route.navigate([`/client`]);
+      },
       error: err => {}
     })
   }
