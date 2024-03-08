@@ -13,26 +13,33 @@ import { ActionButtonRendererComponent } from '../action-button-renderer/action-
 import { ConfirmComponent } from '../confirm/confirm.component';
 import { NgIf } from '@angular/common';
 import { ActionService } from '../action.service';
+import { LottieComponent, AnimationOptions } from 'ngx-lottie';
+import {ClientModel} from "../../model/ClientModel";
 
 @Component({
   selector: 'app-invoice',
   standalone: true,
-  imports: [
-    RouterLink,
-    RouterLinkActive,
-    AgGridAngular,
-    ConfirmComponent,
-    NgIf,
-  ],
+    imports: [
+        RouterLink,
+        RouterLinkActive,
+        AgGridAngular,
+        ConfirmComponent,
+        NgIf,
+        LottieComponent,
+    ],
   templateUrl: './invoice.component.html',
   styleUrl: './invoice.component.css',
 })
 export class InvoiceComponent implements OnInit {
   visibility: boolean = false;
   invoiceId: string = '';
+  options: AnimationOptions = {
+    path: 'assets/loading-fb.json',
+  };
+  isLoading: boolean = true;
   constructor(
     private apiService: ApiService,
-    private deleteService: ActionService
+    private deleteService: ActionService,
   ) {
     this.deleteService.visibilitySubject.next(false);
     this.deleteService.visibilitySubject.subscribe({
@@ -47,6 +54,7 @@ export class InvoiceComponent implements OnInit {
     });
   }
 
+  allClients: ClientModel[] = [];
   allInvoices: InvoiceDataModel[] = [];
   rowData: any = [];
 
@@ -57,32 +65,49 @@ export class InvoiceComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.apiService.getAllInvoices().subscribe({
+    this.apiService.getAllClients().subscribe({
       next: (value) => {
-        value.data.forEach((invoice) => {
-          this.allInvoices.push({
-            invoiceId: invoice['invoiceId'],
-            invoiceNumber: invoice['invoiceNumber'],
-            invoiceDate: invoice['invoiceDate'],
-            dueDate: invoice['dueDate'],
-            billedTo: invoice['billedTo'],
-            billedBy: 'Fluxbyte Technologies',
-            discount: invoice['discount'],
-            createdAt: invoice['createdAt'],
-            updatedAt: invoice['updatedAt'],
-          });
+        value.data.forEach((client) => {
+          this.allClients.push(client);
         });
-        this.rowData = this.allInvoices.map((invoice) => ({
-          'Invoice Id': invoice['invoiceId'],
-          'Invoice Number': invoice['invoiceNumber'],
-          'Invoice Date': invoice['invoiceDate'].substring(0, 10),
-          'Invoice due date': invoice['dueDate'].substring(0, 10),
-          'Billed By': invoice.billedBy,
-          'Billed To': invoice.billedTo,
-          Discount: invoice['discount'],
-          'Created At': invoice['createdAt'].substring(0, 10),
-          'Updated At': invoice['updatedAt'].substring(0, 10),
-        }));
+        this.apiService.getAllInvoices().subscribe({
+          next: (value) => {
+            value.data.forEach((invoice) => {
+              let clientName = "";
+              for(let i = 0; i < this.allClients.length; i++) {
+                if(this.allClients[i].clientId === invoice['billedTo']) {
+                  clientName = this.allClients[i].name;
+                  break;
+                }
+              }
+              this.allInvoices.push({
+                invoiceId: invoice['invoiceId'],
+                invoiceNumber: invoice['invoiceNumber'],
+                invoiceDate: invoice['invoiceDate'],
+                dueDate: invoice['dueDate'],
+                billedTo: clientName,
+                billedBy: 'Fluxbyte Technologies',
+                discount: invoice['discount'],
+                createdAt: invoice['createdAt'],
+                updatedAt: invoice['updatedAt'],
+              });
+            });
+            this.rowData = this.allInvoices.map((invoice) => ({
+              'Invoice Id': invoice['invoiceId'],
+              'Invoice Number': invoice['invoiceNumber'],
+              'Invoice Date': invoice['invoiceDate'].substring(0, 10),
+              'Invoice due date': invoice['dueDate'].substring(0, 10),
+              'Billed By': invoice.billedBy,
+              'Billed To': invoice.billedTo,
+              'Created At': invoice['createdAt'].substring(0, 10),
+              'Updated At': invoice['updatedAt'].substring(0, 10),
+            }));
+            this.isLoading = false;
+          },
+          error: (err) => {
+            console.error(err);
+          },
+        });
       },
       error: (err) => {
         console.error(err);
@@ -93,7 +118,6 @@ export class InvoiceComponent implements OnInit {
   onChangeVisibility(val: boolean) {
     this.visibility = val;
   }
-
   onCellClicked(event: CellClickedEvent) {}
 
   dateFormatter(params: ValueFormatterParams) {
@@ -108,18 +132,6 @@ export class InvoiceComponent implements OnInit {
     { field: 'Invoice due date', valueFormatter: this.dateFormatter },
     { field: 'Billed By' },
     { field: 'Billed To' },
-    {
-      headerName: 'Discount',
-      valueGetter: (params) => {
-        return params.data.Discount;
-      },
-      valueSetter: (params) => {
-        params.data.Discount = params.newValue;
-        return true;
-      },
-      editable: true,
-      minWidth: 180,
-    },
     { field: 'Created At', valueFormatter: this.dateFormatter },
     { field: 'Updated At', valueFormatter: this.dateFormatter },
     { field: 'Actions', cellRenderer: ActionButtonRendererComponent },

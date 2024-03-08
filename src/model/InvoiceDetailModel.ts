@@ -7,6 +7,10 @@ export type InvoiceDetailModel = {
     invoiceDueDate: string;
     businessName: string;
     businessEmail: string;
+    businessGST: string,
+    businessPan: string,
+    clientGST: string,
+    clientPAN: string,
     clientName: string;
     clientIndustryName: string;
     clientEmail: string;
@@ -15,6 +19,11 @@ export type InvoiceDetailModel = {
       itemName: string;
       quantity: number;
       rate: number;
+    }[];
+    taxInvoice: {
+      invoiceTaxId: string,
+      taxName: string,
+      taxPercentage: number
     }[];
     totalAmount: number;
   };

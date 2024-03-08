@@ -6,4 +6,5 @@ export class ActionService {
   visibilitySubject = new Subject<boolean>();
   deleteInvoiceId = new Subject<string>();
   editInvoice = new Subject<string>();
+  toggleSidebar = new Subject<boolean>();
 }

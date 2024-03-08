@@ -36,17 +36,23 @@
   <div
     class="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700 mt-4 flex-1"
   >
-    <ag-grid-angular
-      [autoSizeStrategy]="autoSizeStrategy"
-      (cellClicked)="onCellClicked($event)"
-      class="ag-theme-quartz"
-      style="height: 100%"
-      [columnDefs]="columnDefs"
-      [defaultColDef]="defaultColDef"
-      [rowData]="rowData"
-      [pagination]="true"
-    >
-    </ag-grid-angular>
+    <div class="flex flex-col justify-center h-full" *ngIf="isLoading">
+      <ng-container class="flex justify-center flex-col items-center h-[100%]">
+        <ng-lottie [options]="options" width="150px" height="auto" class="flex justify-center"></ng-lottie>
+        <p class="flex justify-center font-medium">Wait while we fetch your Data.</p>
+      </ng-container>
+    </div>
+    <ng-container *ngIf="!isLoading">
+      <ag-grid-angular
+        (cellClicked)="onCellClicked($event)"
+        class="ag-theme-quartz"
+        style="height: 100%"
+        [columnDefs]="columnDefs"
+        [defaultColDef]="defaultColDef"
+        [rowData]="rowData"
+      >
+      </ag-grid-angular>
+    </ng-container>
   </div>
 </div>
 <ng-container *ngIf="visibility">

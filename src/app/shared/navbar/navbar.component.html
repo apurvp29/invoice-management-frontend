@@ -26,17 +26,15 @@
             ></path>
           </svg>
         </button>
-        <a href="https://www.thefluxbyte.com/" class="flex ms-2 md:me-24">
-          <img
-            src="https://media.licdn.com/dms/image/C4E0BAQFadyr8ebQqBg/company-logo_200_200/0/1630620422617?e=2147483647&v=beta&t=vGUi3axjBv5QPky1RhDvXkX6Nm35bIDAfEgoFN8bQ3U"
-            class="h-8 me-3"
-            alt="FlowBite Logo"
-          />
+        <a href="https://www.thefluxbyte.com/" class="flex ms-2 md:me-24 items-center gap-2">
+          <span>
+            <img ngSrc="../../../assets/Fluxbyte.svg" alt="file" height="30" width="30">
+          </span>
           <span
             class="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap dark:text-white"
             >Fluxbyte
-            <span class="hidden sm:inline-block">Technologies</span></span
-          >
+            <span class="hidden sm:inline-block">Technologies</span>
+          </span>
         </a>
       </div>
       <div class="flex items-center">
@@ -44,48 +42,51 @@
           <div>
             <button
               type="button"
-              class="flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
+              class="flex text-sm rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
               aria-expanded="false"
               data-dropdown-toggle="dropdown-user"
             >
               <span class="sr-only">Open user menu</span>
-              <img
-                class="w-9 h-9 border border-black rounded-full"
-                src="https://i.pinimg.com/originals/c2/c1/7b/c2c17bd0d36479514b90a15589d50d3c.jpg"
-                alt="user photo"
-              />
+              <span>
+                <img
+                  class="w-9 h-9 border border-black rounded-full"
+                  src="https://i.pinimg.com/originals/c2/c1/7b/c2c17bd0d36479514b90a15589d50d3c.jpg"
+                  alt="user photo"
+                />
+              </span>
             </button>
           </div>
-
-          <div
-            class="z-50 hidden my-4 text-base list-none bg-white border border-gray-200 shadow divide-y divide-gray-100 rounded dark:bg-gray-700 dark:divide-gray-600"
-            id="dropdown-user"
-          >
-            <div class="px-4 py-3" role="none">
-              <p
-                class="text-sm text-gray-900 dark:text-white font-bold"
-                role="none"
-              >
-                Fluxbyte Technologies Pvt. Ltd.
-              </p>
-              <p
-                class="text-sm font-medium text-gray-900 truncate dark:text-gray-300"
-                role="none"
-              >
-                info&#64;thefluxbyte.com
-              </p>
-            </div>
-            <ul class="py-1" role="none">
-              <li>
-                <a
-                  href="#"
-                  class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
-                  role="menuitem"
-                  >Sign out</a
+            <div
+              class="z-50 hidden my-4 text-base list-none bg-white border border-gray-200 shadow divide-y divide-gray-100 rounded dark:bg-gray-700 dark:divide-gray-600"
+              id="dropdown-user"
+            >
+              <div class="px-4 py-3" role="none">
+                <p
+                  class="text-sm text-gray-900 dark:text-white font-bold"
+                  role="none"
                 >
-              </li>
-            </ul>
-          </div>
+                  Fluxbyte Technologies Pvt. Ltd.
+                </p>
+                <p
+                  class="text-sm font-medium text-gray-900 truncate dark:text-gray-300"
+                  role="none"
+                >
+                  info&#64;thefluxbyte.com
+                </p>
+              </div>
+              <ul class="py-1" role="none">
+                <li>
+                  <a
+                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
+                    role="menuitem"
+                    >
+                    <button type="button" (click)="logout()">
+                      Sign out
+                    </button>
+                  </a>
+                </li>
+              </ul>
+            </div>
         </div>
       </div>
     </div>
