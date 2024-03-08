@@ -1,5 +1,4 @@
 import { Routes } from '@angular/router';
-import { NestingComponent } from "./nesting-task/nesting/nesting.component";
 import {DashboardComponent} from "./dashboard/dashboard.component";
 import {ClientComponent} from "./client/client.component";
 import {AddClientComponent} from "./add-client/add-client.component";
@@ -11,10 +10,6 @@ export const routes: Routes = [
   },
   {
     path: '', redirectTo: 'dashboard', pathMatch: "full"
-  },
-  {
-    path: 'nesting',
-    component: NestingComponent
   },
   {
     path: 'client',
