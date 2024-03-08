@@ -4,7 +4,7 @@ export const environment = {
     domain: 'dev-aebxkuruzt2a5vuj.us.auth0.com',
     clientId: 'CehLkBhTaBzUvZWLtJdgOQm0MjaTLKJ0',
     authorizationParams: {
-      redirect_uri: 'http://localhost:4200',
+      redirect_uri: 'http://invoice-management-frontend.s3-website.eu-west-2.amazonaws.com',
       audience: 'http://localhost:8000/api',
     },
   },
