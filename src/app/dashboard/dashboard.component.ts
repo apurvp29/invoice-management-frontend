@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../api.service';
 import { ResponseModel } from '../../model/ResponseModel';
 import { NgForOf } from '@angular/common';
-import {AuthService} from "@auth0/auth0-angular";
+// import {AuthService} from "@auth0/auth0-angular";
 
 @Component({
   selector: 'app-dashboard',
@@ -14,7 +14,6 @@ import {AuthService} from "@auth0/auth0-angular";
 export class DashboardComponent implements OnInit {
   constructor(
     private apiService: ApiService,
-    public authService: AuthService
   ) {}
 
   businessDetails: [] | undefined;

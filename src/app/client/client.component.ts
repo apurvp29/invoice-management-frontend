@@ -1,30 +1,55 @@
 import { Component, OnInit } from '@angular/core';
 import { AgGridAngular } from 'ag-grid-angular';
-import { ColDef } from 'ag-grid-community';
-import {
-  RouterLink,
-  RouterLinkActive,
-  RouterOutlet,
-} from '@angular/router';
+import { CellClickedEvent, ColDef } from 'ag-grid-community';
+import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { ClientModel } from '../../model/ClientModel';
 import { ApiService } from '../api.service';
 import { LottieComponent, AnimationOptions } from 'ngx-lottie';
-import { NgIf } from "@angular/common";
+import { NgIf } from '@angular/common';
+import { ClientActionComponent } from '../client-action/client-action.component';
+import { ConfirmComponent } from '../confirm/confirm.component';
+import { ActionService } from '../action.service';
 
 @Component({
   selector: 'app-client',
   standalone: true,
-  imports: [RouterOutlet, AgGridAngular, RouterLink, RouterLinkActive, LottieComponent, NgIf],
+  imports: [
+    RouterOutlet,
+    AgGridAngular,
+    RouterLink,
+    RouterLinkActive,
+    LottieComponent,
+    NgIf,
+    ConfirmComponent,
+  ],
   templateUrl: './client.component.html',
   styleUrl: './client.component.css',
 })
 export class ClientComponent implements OnInit {
-  constructor(private apiService: ApiService) {}
+  allClients: ClientModel[] = [];
+  isLoading: boolean = true;
+  visibility: boolean = false;
+  clientId: string = '';
+  constructor(
+    private apiService: ApiService,
+    private deleteService: ActionService
+  ) {
+    this.deleteService.visibilityClient.next(false);
+    this.deleteService.visibilityClient.subscribe({
+      next: (value) => {
+        this.visibility = value;
+      },
+    });
+    this.deleteService.deleteClientId.subscribe({
+      next: (value) => {
+        this.clientId = value;
+      },
+    });
+  }
   options: AnimationOptions = {
     path: 'assets/loading-fb.json',
   };
-  allClients: ClientModel[] = [];
-  isLoading: boolean = true;
+
   rowData: {
     Name: string;
     Industry: string;
@@ -35,6 +60,11 @@ export class ClientComponent implements OnInit {
     Email: string;
     Phone: string;
   }[] = [];
+
+  onChangeVisibility(val: boolean) {
+    this.visibility = val;
+  }
+
   ngOnInit(): void {
     this.apiService.getAllClients().subscribe({
       next: (value) => {
@@ -42,6 +72,7 @@ export class ClientComponent implements OnInit {
           this.allClients.push(client);
         });
         this.rowData = this.allClients.map((client) => ({
+          clientId: client.clientId,
           Name: client.name,
           Industry: client.industryName,
           PAN: client.pan,
@@ -59,6 +90,8 @@ export class ClientComponent implements OnInit {
     });
   }
 
+  onCellClicked(event: CellClickedEvent) {}
+
   colDefs: ColDef[] = [
     { field: 'Name' },
     { field: 'Industry' },
@@ -68,5 +101,6 @@ export class ClientComponent implements OnInit {
     { field: 'GST' },
     { field: 'Email' },
     { field: 'Phone' },
+    { field: 'Actions', cellRenderer: ClientActionComponent },
   ];
 }

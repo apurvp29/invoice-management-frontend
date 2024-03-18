@@ -1,26 +1,37 @@
 import { Routes } from '@angular/router';
-import {DashboardComponent} from "./dashboard/dashboard.component";
-import {ClientComponent} from "./client/client.component";
-import {AddClientComponent} from "./add-client/add-client.component";
+import { DashboardComponent } from './dashboard/dashboard.component';
+import { ClientComponent } from './client/client.component';
+import { AddClientComponent } from './add-client/add-client.component';
 
 export const routes: Routes = [
   {
     path: 'dashboard',
-    component: DashboardComponent
+    component: DashboardComponent,
   },
   {
-    path: '', redirectTo: 'dashboard', pathMatch: "full"
+    path: '',
+    redirectTo: 'dashboard',
+    pathMatch: 'full',
   },
   {
     path: 'client',
     children: [
       {
         path: '',
-        component: ClientComponent
+        component: ClientComponent,
       },
       {
         path: 'add-client',
-        component: AddClientComponent
+        component: AddClientComponent,
+      },
+      {
+        path: 'edit-client',
+        children: [
+          {
+            path: ':id',
+            component: AddClientComponent,
+          },
+        ],
       },
     ],
   },
@@ -29,14 +40,20 @@ export const routes: Routes = [
     children: [
       {
         path: '',
-        loadComponent: () => import('../app/invoice/invoice.component').then(m => m.InvoiceComponent)
+        loadComponent: () =>
+          import('../app/invoice/invoice.component').then(
+            (m) => m.InvoiceComponent
+          ),
       },
       {
         path: 'edit-invoice',
         children: [
           {
             path: ':id',
-            loadComponent: () => import('../app/invoice-o/invoice-create/invoice-create.component').then(m => m.InvoiceCreateComponent)
+            loadComponent: () =>
+              import(
+                '../app/invoice-o/invoice-create/invoice-create.component'
+              ).then((m) => m.InvoiceCreateComponent),
           },
         ],
       },
@@ -45,15 +62,20 @@ export const routes: Routes = [
         children: [
           {
             path: ':id',
-            loadComponent: () => import('../app/invoice-o/invoice-create/invoice-create.component').then(m => m.InvoiceCreateComponent)
+            loadComponent: () =>
+              import(
+                '../app/invoice-o/invoice-create/invoice-create.component'
+              ).then((m) => m.InvoiceCreateComponent),
           },
         ],
       },
       {
         path: 'create-invoice',
-        loadComponent: () => import('../app/invoice-o/invoice-create/invoice-create.component').then(m => m.InvoiceCreateComponent)
+        loadComponent: () =>
+          import(
+            '../app/invoice-o/invoice-create/invoice-create.component'
+          ).then((m) => m.InvoiceCreateComponent),
       },
     ],
   },
-
 ];
