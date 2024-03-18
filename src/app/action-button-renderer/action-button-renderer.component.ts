@@ -30,7 +30,6 @@ export class ActionButtonRendererComponent implements ICellRendererAngularComp {
     return true;
   }
   constructor(private actionService: ActionService) {
-    this.actionService.editInvoice.next('hello edit invoice subscriber');
   }
 
   onEditClick() {

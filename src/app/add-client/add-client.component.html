@@ -2,46 +2,48 @@
   <div
     class="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700 mt-14 flex flex-col items-center"
   >
-    <form [formGroup]="clientFormInformation" class="w-full xl:w-2/3 p-3">
+    <div
+      class="flex flex-col justify-center h-full"
+      *ngIf="currentClientId && !(show | async)"
+    >
+      <ng-container class="flex justify-center flex-col items-center h-[100%]">
+        <ng-lottie
+          [options]="options"
+          width="150px"
+          height="auto"
+          class="flex justify-center"
+        ></ng-lottie>
+        <p class="flex justify-center font-medium">
+          Wait while we fetch your Data.
+        </p>
+      </ng-container>
+    </div>
+    <form
+      *ngIf="!currentClientId || (show | async)"
+      [formGroup]="clientFormInformation"
+      class="w-full xl:w-2/3 p-3"
+    >
       <div>
         <div
           role="button"
           class="flex justify-between items-center px-5"
-          (click)="onSelectTDropdown(1)"
+          (click)="onSelectDropdown(1)"
         >
           <span class="text-lg font-semibold">Basic Information</span>
-          <svg
+          <img
             *ngIf="!tabs[0].open"
-            class="w-2.5 h-2.5 ms-3"
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 10 6"
-          >
-            <path
-              stroke="currentColor"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="m1 1 4 4 4-4"
-            />
-          </svg>
-          <svg
+            ngSrc="assets/clode-d.svg"
+            alt="close"
+            height="10"
+            width="10"
+          />
+          <img
             *ngIf="tabs[0].open"
-            class="w-6 h-6 text-gray-800 dark:text-white"
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="-6.5 0 24 24"
-          >
-            <path
-              stroke="currentColor"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="m16 14-4-4-4 4"
-            />
-          </svg>
+            ngSrc="assets/open-u.svg"
+            alt="open"
+            height="25"
+            width="25"
+          />
         </div>
 
         <ng-container *ngIf="tabs[0].open" class="mb-2">
@@ -63,11 +65,22 @@
             </div>
             <div class="flex flex-col lg:w-1/2 gap-1">
               <label class="text-gray-500">Client Industry</label>
-              <input
-                formControlName="clientIndustry"
+              <select
                 class="border border-gray-300 bg-gray-50 rounded-md"
-                type="text"
-              />
+                formControlName="clientIndustry"
+              >
+                <option
+                  [disabled]="
+                    f.controls['clientIndustry'].dirty ||
+                    f.controls['clientIndustry'].touched
+                  "
+                >
+                  Select
+                </option>
+                <option *ngFor="let industry of clientIndustries">
+                  {{ industry }}
+                </option>
+              </select>
               <span
                 *ngIf="(f.controls['clientIndustry'].errors?.['required'] && (f.controls['clientIndustry'].dirty || f.controls['clientIndustry'].touched)) || (isAllValid && f.controls['clientIndustry'].errors?.['required'])"
                 class="w-1/2 text-[12px] text-red-600 inline-block lg:hidden"
@@ -92,64 +105,28 @@
               >Client industry required*</span
             >
           </div>
-          <div
-            class="flex flex-col lg:flex-row justify-between px-5 gap-4 mt-5"
-          >
-            <div class="flex flex-col lg:w-1/2 gap-1">
-              <label class="text-gray-500">Country</label>
-              <input
-                class="border border-gray-300 bg-gray-50 rounded-md"
-                type="text"
-              />
-            </div>
-            <div class="flex flex-col lg:w-1/2 gap-1">
-              <label class="text-gray-500">City</label>
-              <input
-                class="border border-gray-300 bg-gray-50 rounded-md"
-                type="text"
-              />
-            </div>
-          </div>
         </ng-container>
 
         <div
           role="button"
           class="flex justify-between items-center px-5 mt-6"
-          (click)="onSelectTDropdown(2)"
+          (click)="onSelectDropdown(2)"
         >
           <span class="text-lg font-semibold">Tax Information</span>
-          <svg
+          <img
             *ngIf="!tabs[1].open"
-            class="w-2.5 h-2.5 ms-3"
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 10 6"
-          >
-            <path
-              stroke="currentColor"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="m1 1 4 4 4-4"
-            />
-          </svg>
-          <svg
+            ngSrc="assets/clode-d.svg"
+            alt="close"
+            height="10"
+            width="10"
+          />
+          <img
             *ngIf="tabs[1].open"
-            class="w-6 h-6 text-gray-800 dark:text-white"
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="-6.5 0 24 24"
-          >
-            <path
-              stroke="currentColor"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="m16 14-4-4-4 4"
-            />
-          </svg>
+            ngSrc="assets/open-u.svg"
+            alt="open"
+            height="25"
+            width="25"
+          />
         </div>
 
         <ng-container *ngIf="tabs[1].open">
@@ -166,8 +143,9 @@
               <span
                 *ngIf="((f.controls['gstNumber'].errors?.['pattern']) && (f.controls['gstNumber'].dirty || f.controls['gstNumber'].touched)) || (isAllValid && f.controls['gstNumber'].errors?.['pattern'])"
                 class="w-1/2 text-[12px] text-red-600 inline-block lg:hidden"
-                >Invalid GST number*</span
               >
+                Invalid GST number*
+              </span>
               <span
                 *ngIf="((f.controls['gstNumber'].errors?.['required']) && (f.controls['gstNumber'].dirty || f.controls['gstNumber'].touched)) || (isAllValid && f.controls['gstNumber'].errors?.['required'])"
                 class="w-1/2 text-[12px] text-red-600 inline-block lg:hidden"
@@ -273,41 +251,198 @@
         <div
           role="button"
           class="flex justify-between items-center px-5 mt-6 mb-2"
-          (click)="onSelectTDropdown(5)"
+          (click)="onSelectDropdown(3)"
+        >
+          <span class="text-lg font-semibold">Address</span>
+          <img
+            *ngIf="!tabs[2].open"
+            ngSrc="assets/clode-d.svg"
+            alt="close"
+            height="10"
+            width="10"
+          />
+          <img
+            *ngIf="tabs[2].open"
+            ngSrc="assets/open-u.svg"
+            alt="open"
+            height="25"
+            width="25"
+          />
+        </div>
+
+        <ng-container *ngIf="tabs[2].open">
+          <div
+            class="flex flex-col lg:flex-row justify-between px-5 gap-4 mt-2"
+          >
+            <div class="flex flex-col lg:w-1/2 gap-1">
+              <label class="text-gray-500">Country</label>
+              <select
+                class="border border-gray-300 bg-gray-50 rounded-md w-full"
+                formControlName="country"
+                (change)="onSelectCountry($event)"
+              >
+                <option
+                  *ngFor="let country of countries"
+                  value="{{ country.code }}"
+                >
+                  {{ country.name }}
+                </option>
+              </select>
+              <span
+                *ngIf="(f.controls['country'].errors?.['required'] && (f.controls['country'].dirty || f.controls['country'].touched)) || (isAllValid && f.controls['country'].errors?.['required'])"
+                class="w-1/2 text-[12px] text-red-600 inline-block lg:hidden"
+              >
+                Country required*
+              </span>
+            </div>
+
+            <div class="flex flex-col lg:w-1/2 gap-1">
+              <label class="text-gray-500">State</label>
+              <select
+                class="border border-gray-300 bg-gray-50 rounded-md w-full"
+                formControlName="state"
+                (change)="onSelectState($event)"
+              >
+                <option
+                  [disabled]="
+                    f.controls['state'].dirty || f.controls['state'].touched
+                  "
+                >
+                  Select
+                </option>
+                <option
+                  *ngFor="let state of showRespectiveStates"
+                  [value]="state.code"
+                >
+                  {{ state.name }}
+                </option>
+              </select>
+              <span
+                *ngIf="(f.controls['state'].errors?.['required'] && (f.controls['state'].dirty || f.controls['state'].touched)) || (isAllValid && f.controls['state'].errors?.['required'])"
+                class="w-1/2 text-[12px] text-red-600 inline-block lg:hidden"
+                >State required*</span
+              >
+            </div>
+          </div>
+          <div class="flex flex-col lg:flex-row justify-between px-5 gap-4">
+            <span
+              *ngIf="(f.controls['country'].errors?.['required'] && (f.controls['country'].dirty || f.controls['country'].touched)) || (isAllValid && f.controls['country'].errors?.['required'])"
+              class="hidden lg:inline-block w-1/2 text-[12px] text-red-600"
+            >
+              Country required*
+            </span>
+            <span
+              *ngIf="!(((f.controls['country'].errors?.['required']) && (f.controls['country'].dirty || f.controls['country'].touched)) || (isAllValid && f.controls['country'].errors?.['required'])) && (((f.controls['state'].errors?.['required']) && (f.controls['state'].dirty || f.controls['state'].touched)) || (isAllValid && f.controls['state'].errors?.['required']))"
+              class="hidden lg:inline-block w-1/2"
+            >
+            </span>
+            <span
+              *ngIf="(f.controls['state'].errors?.['required'] && (f.controls['state'].dirty || f.controls['state'].touched)) || (isAllValid && f.controls['state'].errors?.['required'])"
+              class="hidden lg:inline-block w-1/2 text-[12px] text-red-600"
+            >
+              State required*
+            </span>
+          </div>
+          <div
+            class="flex flex-col lg:flex-row justify-between px-5 gap-4 mt-5"
+          >
+            <div class="flex flex-col lg:w-1/2 gap-1">
+              <label class="text-gray-500">City</label>
+              <select
+                class="border border-gray-300 bg-gray-50 rounded-md"
+                formControlName="city"
+              >
+                <option
+                  [disabled]="
+                    f.controls['city'].dirty || f.controls['city'].touched
+                  "
+                >
+                  Select
+                </option>
+                <option *ngFor="let city of showRespectiveCities">
+                  {{ city.name }}
+                </option>
+              </select>
+              <span
+                *ngIf="(f.controls['city'].errors?.['required'] && (f.controls['city'].dirty || f.controls['city'].touched)) || (isAllValid && f.controls['city'].errors?.['required'])"
+                class="w-1/2 text-[12px] text-red-600 inline-block lg:hidden"
+                >City required*</span
+              >
+            </div>
+            <div class="flex flex-col lg:w-1/2 gap-1">
+              <label class="text-gray-500">Postal Code / Zip Code</label>
+              <input
+                formControlName="postalCode"
+                class="border border-gray-300 bg-gray-50 rounded-md"
+                type="text"
+              />
+              <span
+                *ngIf="(f.controls['postalCode'].errors?.['required'] && (f.controls['postalCode'].dirty || f.controls['postalCode'].touched)) || (isAllValid && f.controls['postalCode'].errors?.['required'])"
+                class="w-1/2 text-[12px] text-red-600 inline-block lg:hidden"
+                >Postal / Zip code required*</span
+              >
+            </div>
+          </div>
+          <div class="flex flex-col lg:flex-row justify-between px-5 gap-4">
+            <span
+              *ngIf="(f.controls['city'].errors?.['required'] && (f.controls['city'].dirty || f.controls['city'].touched)) || (isAllValid && f.controls['city'].errors?.['required'])"
+              class="hidden lg:inline-block w-1/2 text-[12px] text-red-600"
+            >
+              City required*
+            </span>
+            <span
+              *ngIf="!(((f.controls['city'].errors?.['required']) && (f.controls['city'].dirty || f.controls['city'].touched)) || (isAllValid && f.controls['city'].errors?.['required'])) && (((f.controls['postalCode'].errors?.['required']) && (f.controls['postalCode'].dirty || f.controls['postalCode'].touched)) || (isAllValid && f.controls['postalCode'].errors?.['required']))"
+              class="hidden lg:inline-block w-1/2"
+            >
+            </span>
+            <span
+              *ngIf="(f.controls['postalCode'].errors?.['required'] && (f.controls['postalCode'].dirty || f.controls['postalCode'].touched)) || (isAllValid && f.controls['state'].errors?.['postalCode'])"
+              class="hidden lg:inline-block w-1/2 text-[12px] text-red-600"
+            >
+              Postal / Zip code required*
+            </span>
+          </div>
+          <div class="flex flex-col px-5 w-full mt-5">
+            <label for="street-address" class="text-gray-500 mb-1"
+              >Street Address
+            </label>
+            <input
+              id="street-address"
+              formControlName="streetAddress"
+              class="border border-gray-300 bg-gray-50 rounded-md"
+              type="text"
+            />
+          </div>
+          <div class="flex flex-col lg:flex-row justify-between px-5 gap-4">
+            <span
+              *ngIf="(f.controls['streetAddress'].errors?.['required'] && (f.controls['streetAddress'].dirty || f.controls['streetAddress'].touched)) || (isAllValid && f.controls['streetAddress'].errors?.['required'])"
+              class="inline-block w-1/2 text-[12px] text-red-600"
+            >
+              Address required*
+            </span>
+          </div>
+        </ng-container>
+
+        <div
+          role="button"
+          class="flex justify-between items-center px-5 mt-6 mb-2"
+          (click)="onSelectDropdown(5)"
         >
           <span class="text-lg font-semibold">Additional Details</span>
-          <svg
+          <img
             *ngIf="!tabs[4].open"
-            class="w-2.5 h-2.5 ms-3"
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 10 6"
-          >
-            <path
-              stroke="currentColor"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="m1 1 4 4 4-4"
-            />
-          </svg>
-          <svg
+            ngSrc="assets/clode-d.svg"
+            alt="close"
+            height="10"
+            width="10"
+          />
+          <img
             *ngIf="tabs[4].open"
-            class="w-6 h-6 text-gray-800 dark:text-white"
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="-6.5 0 24 24"
-          >
-            <path
-              stroke="currentColor"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="m16 14-4-4-4 4"
-            />
-          </svg>
+            ngSrc="assets/open-u.svg"
+            alt="open"
+            height="25"
+            width="25"
+          />
         </div>
 
         <ng-container *ngIf="tabs[4].open">
@@ -328,6 +463,8 @@
             <div class="flex flex-col lg:w-1/2 gap-1">
               <label for="email" class="text-gray-500">Email</label>
               <input
+                [readOnly]="currentClientId"
+                [ngStyle]="{ color: currentClientId ? 'gray' : 'black' }"
                 formControlName="email"
                 id="email"
                 class="border border-gray-300 bg-gray-50 rounded-md"
@@ -386,7 +523,7 @@
         <button
           type="button"
           class="mx-5 my-6 text-white bg-[#16579D] hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-md text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
-          (click)="onCreateClient()"
+          (click)="currentClientId ? updateClient() : onCreateClient()"
         >
           Save
         </button>

@@ -7,15 +7,28 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { NgForOf, NgIf, NgOptimizedImage, NgStyle } from '@angular/common';
+import {
+  AsyncPipe,
+  NgForOf,
+  NgIf,
+  NgOptimizedImage,
+  NgStyle,
+} from '@angular/common';
 import { ApiService } from '../../api.service';
 import { BusinessModel } from '../../../model/BusinessModel';
 import { ClientModel } from '../../../model/ClientModel';
 import { InvoiceModel } from '../../../model/InvoiceModel';
 import { ItemsModel } from '../../../model/ItemsModel';
-import { ActivatedRoute, Router } from '@angular/router';
+import {
+  ActivatedRoute,
+  Router,
+  RouterLink,
+  RouterLinkActive,
+} from '@angular/router';
 import { InvoiceDetailModel } from '../../../model/InvoiceDetailModel';
 import { InvoiceDataModel } from '../../../model/InvoiceDataModel';
+import { LottieComponent, AnimationOptions } from 'ngx-lottie';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'app-invoice-create',
@@ -27,6 +40,10 @@ import { InvoiceDataModel } from '../../../model/InvoiceDataModel';
     NgForOf,
     NgStyle,
     NgOptimizedImage,
+    LottieComponent,
+    AsyncPipe,
+    RouterLink,
+    RouterLinkActive,
   ],
   templateUrl: './invoice-create.component.html',
   styleUrl: './invoice-create.component.css',
@@ -40,12 +57,18 @@ export class InvoiceCreateComponent implements OnInit {
   clientObj: ClientModel | undefined;
   businessObj: BusinessModel | undefined;
   currentInvoiceDetail: InvoiceDetailModel | undefined;
+  isDownloading = new BehaviorSubject(false);
   invoiceId: string = '';
   itemsId: string[] = [];
+  taxId: string[] = [];
   totalAmount: number = 0;
   subTotalAmount: number = 0;
   currentInvoice: InvoiceDataModel | undefined;
   viewOnly: boolean = false;
+  options: AnimationOptions = {
+    path: 'assets/loading-fb.json',
+  };
+  showMessage: string = '';
 
   constructor(
     private fb: FormBuilder,
@@ -123,6 +146,10 @@ export class InvoiceCreateComponent implements OnInit {
                           ],
                         })
                       );
+                      this.taxId[i] =
+                        this.currentInvoiceDetail.data.taxInvoice[
+                          i
+                        ].invoiceTaxId;
                     }
                     this.totalAmount = Number(
                       this.currentInvoiceDetail.data.totalAmount
@@ -188,6 +215,12 @@ export class InvoiceCreateComponent implements OnInit {
         break;
       }
     }
+  }
+
+  navigateToEditClient() {
+    this.route
+      .navigate([`/client/edit-client/${this.clientObj?.clientId}`])
+      .then((r) => {});
   }
 
   onAddItem() {
@@ -277,14 +310,21 @@ export class InvoiceCreateComponent implements OnInit {
 
   onRemoveItem(index: number) {
     this.fArray.removeAt(index);
-    if (this.invoiceId) {
-      this.itemsId.splice(index, 1);
+    {
+      if (this.invoiceId) {
+        this.itemsId.splice(index, 1);
+      }
     }
     this.updateAmount();
   }
 
   onRemoveTax(index: number) {
     this.fArrayTaxes.removeAt(index);
+    {
+      if (this.invoiceId) {
+        this.taxId.splice(index, 1);
+      }
+    }
     this.updateAmount();
   }
 
@@ -351,9 +391,57 @@ export class InvoiceCreateComponent implements OnInit {
             this.invoiceId
           );
         }
-        this.route.navigate([`/invoice/view-invoice/${this.invoiceId}`], {
-          queryParams: { view: true },
-        });
+
+        for (let i = 0; i < this.taxId.length; i++) {
+          const taxPayload = {
+            taxName: this.fArrayTaxes.value[i]['taxName'],
+            taxPercentage: Number(this.fArrayTaxes.value[i]['taxPercentage']),
+          };
+          this.apiService.updateTaxes(this.taxId[i], taxPayload).subscribe({
+            next: (taxVal) => {},
+          });
+        }
+
+        for (
+          let i = 0;
+          i < this.currentInvoiceDetail!.data.taxInvoice.length;
+          i++
+        ) {
+          let isTaxPresent: boolean = false;
+          for (let j = 0; j < this.taxId.length; j++) {
+            if (
+              this.taxId[j] ===
+              this.currentInvoiceDetail!.data.taxInvoice[i].invoiceTaxId
+            ) {
+              isTaxPresent = true;
+              break;
+            }
+          }
+
+          if (!isTaxPresent) {
+            this.apiService
+              .deleteTaxes(
+                this.currentInvoiceDetail!.data.taxInvoice[i].invoiceTaxId
+              )
+              .subscribe({
+                next: (tax) => {},
+              });
+          }
+        }
+
+        for (let i = this.taxId.length; i < this.fArrayTaxes.length; i++) {
+          const payload = {
+            taxName: this.fArrayTaxes.value[i]['taxName'],
+            taxPercentage: this.fArrayTaxes.value[i]['taxPercentage'],
+          };
+          this.apiService.createTaxes(this.invoiceId, payload);
+        }
+
+        this.route
+          .navigate([`/invoice/view-invoice/${this.invoiceId}`], {
+            queryParams: { view: true },
+          })
+          .then((r) => {});
       },
     });
   }
@@ -396,16 +484,23 @@ export class InvoiceCreateComponent implements OnInit {
             };
             this.apiService.createTaxes(value.data.invoiceId, payload);
           });
-          this.route.navigate(
-            [`/invoice/view-invoice/${value.data.invoiceId}`],
-            { queryParams: { view: true } }
-          );
+          this.route
+            .navigate([`/invoice/view-invoice/${value.data.invoiceId}`], {
+              queryParams: { view: true },
+            })
+            .then((r) => {});
         }
       },
     });
   }
 
-  onDownload() {
+  navigateToEdit() {
+    this.route
+      .navigate([`/invoice/edit-invoice/${this.invoiceId}`])
+      .then((r) => {});
+  }
+
+  getPayload() {
     const items: {
       name: string;
       quantity: number;
@@ -433,6 +528,7 @@ export class InvoiceCreateComponent implements OnInit {
       });
     });
     const payload: object = {
+      businessName: this.currentInvoiceDetail?.data.businessName,
       invoiceNumber: this.currentInvoiceDetail?.data.invoiceNumber,
       invoiceDate: this.formatDate(
         this.currentInvoiceDetail?.data.invoiceDate.substring(0, 10)!
@@ -447,62 +543,46 @@ export class InvoiceCreateComponent implements OnInit {
       clientName: this.currentInvoiceDetail?.data.clientName,
       clientEmail: this.currentInvoiceDetail?.data.clientEmail,
       clientPhone: this.clientObj?.phone,
+      clientStreetAddress: this.currentInvoiceDetail?.data.clientStreetAddress,
+      clientCity: this.currentInvoiceDetail?.data.clientCity,
+      clientState: this.currentInvoiceDetail?.data.clientState,
+      clientCountry: this.currentInvoiceDetail?.data.clientCountry,
+      clientPincode: this.currentInvoiceDetail?.data.clientPincode,
       items: items,
       taxes: taxes,
       totalAmount: this.totalAmount,
     };
+    return payload;
+  }
+
+  onDownload() {
+    this.showMessage = 'Downloading📥, Please wait.';
+    this.isDownloading.next(true);
+    const payload = this.getPayload();
     this.apiService.downloadPdf(payload).subscribe({
-      next: (value) => {},
+      next: (value: { code: number; message: string; data: any }) => {
+        if (this.currentInvoiceDetail) {
+          this.apiService
+            .sendMessageViaWhatsapp(
+              this.currentInvoiceDetail.data.invoiceNumber,
+              true
+            )
+            .subscribe({
+              next: (value) => {
+                this.isDownloading.next(false);
+                window.open(value.data, '_blank');
+              },
+            });
+        }
+      },
       error: (err) => {},
     });
   }
 
   sendMessage() {
-    const items: {
-      name: string;
-      quantity: number;
-      rate: number;
-      amount: number;
-    }[] = [];
-
-    const taxes: {
-      taxName: string;
-      taxPercentage: number;
-    }[] = [];
-
-    this.currentInvoiceDetail?.data.itemsInvoice.forEach((item) => {
-      items.push({
-        name: item.itemName,
-        quantity: item.quantity,
-        rate: item.rate,
-        amount: Number(item.quantity) * Number(item.rate),
-      });
-    });
-    this.currentInvoiceDetail?.data.taxInvoice.forEach((tax) => {
-      taxes.push({
-        taxName: tax.taxName,
-        taxPercentage: tax.taxPercentage,
-      });
-    });
-    const payload: object = {
-      invoiceNumber: this.currentInvoiceDetail?.data.invoiceNumber,
-      invoiceDate: this.formatDate(
-        this.currentInvoiceDetail?.data.invoiceDate.substring(0, 10)!
-      ),
-      dueDate: this.formatDate(
-        this.currentInvoiceDetail?.data.invoiceDueDate.substring(0, 10)!
-      ),
-      businessGST: this.currentInvoiceDetail?.data.businessGST,
-      businessPAN: this.currentInvoiceDetail?.data.businessPan,
-      clientGST: this.currentInvoiceDetail?.data.clientGST,
-      clientPAN: this.currentInvoiceDetail?.data.clientPAN,
-      clientName: this.currentInvoiceDetail?.data.clientName,
-      clientEmail: this.currentInvoiceDetail?.data.clientEmail,
-      clientPhone: this.clientObj?.phone,
-      items: items,
-      taxes: taxes,
-      totalAmount: this.totalAmount,
-    };
+    this.showMessage = 'Sending📤, Please wait.';
+    this.isDownloading.next(true);
+    const payload = this.getPayload();
     this.apiService.downloadPdf(payload).subscribe({
       next: (value: { code: number; message: string; data: any }) => {
         if (this.currentInvoiceDetail) {
@@ -511,7 +591,9 @@ export class InvoiceCreateComponent implements OnInit {
               this.currentInvoiceDetail.data.invoiceNumber
             )
             .subscribe({
-              next: (value) => {},
+              next: (value) => {
+                this.isDownloading.next(false);
+              },
             });
         }
       },

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { ApiService } from '../api.service';
 import { InvoiceDataModel } from '../../model/InvoiceDataModel';
 import { AgGridAngular } from 'ag-grid-angular';
@@ -14,19 +14,19 @@ import { ConfirmComponent } from '../confirm/confirm.component';
 import { NgIf } from '@angular/common';
 import { ActionService } from '../action.service';
 import { LottieComponent, AnimationOptions } from 'ngx-lottie';
-import {ClientModel} from "../../model/ClientModel";
+import { ClientModel } from '../../model/ClientModel';
 
 @Component({
   selector: 'app-invoice',
   standalone: true,
-    imports: [
-        RouterLink,
-        RouterLinkActive,
-        AgGridAngular,
-        ConfirmComponent,
-        NgIf,
-        LottieComponent,
-    ],
+  imports: [
+    RouterLink,
+    RouterLinkActive,
+    AgGridAngular,
+    ConfirmComponent,
+    NgIf,
+    LottieComponent,
+  ],
   templateUrl: './invoice.component.html',
   styleUrl: './invoice.component.css',
 })
@@ -40,6 +40,7 @@ export class InvoiceComponent implements OnInit {
   constructor(
     private apiService: ApiService,
     private deleteService: ActionService,
+    private route: Router
   ) {
     this.deleteService.visibilitySubject.next(false);
     this.deleteService.visibilitySubject.subscribe({
@@ -73,9 +74,9 @@ export class InvoiceComponent implements OnInit {
         this.apiService.getAllInvoices().subscribe({
           next: (value) => {
             value.data.forEach((invoice) => {
-              let clientName = "";
-              for(let i = 0; i < this.allClients.length; i++) {
-                if(this.allClients[i].clientId === invoice['billedTo']) {
+              let clientName = '';
+              for (let i = 0; i < this.allClients.length; i++) {
+                if (this.allClients[i].clientId === invoice['billedTo']) {
                   clientName = this.allClients[i].name;
                   break;
                 }
@@ -118,7 +119,16 @@ export class InvoiceComponent implements OnInit {
   onChangeVisibility(val: boolean) {
     this.visibility = val;
   }
-  onCellClicked(event: CellClickedEvent) {}
+  onCellClicked(event: CellClickedEvent) {
+    if (event.colDef.field === 'Invoice Number') {
+      this.route.navigate(
+        [`/invoice/view-invoice/${event.data['Invoice Id']}`],
+        {
+          queryParams: { view: true },
+        }
+      );
+    }
+  }
 
   dateFormatter(params: ValueFormatterParams) {
     let parts = params.value.split('-');
@@ -139,9 +149,5 @@ export class InvoiceComponent implements OnInit {
 
   public defaultColDef: ColDef = {
     filter: true,
-  };
-
-  public autoSizeStrategy: SizeColumnsToContentStrategy = {
-    type: 'fitCellContents',
   };
 }

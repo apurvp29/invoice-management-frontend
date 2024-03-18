@@ -18,19 +18,72 @@ export class ApiService {
     'authorization',
     this.authorization
   );
+
   downloadPdf(payload: object) {
     const url: string = `${baseUrl}pdf`;
     return this.http.post<{code: number, message: string, data: any}>(url, payload, { headers: this.header });
   }
 
-  createClient(payload: CreateClientModel) {
-    const url: string = `${baseUrl}client`;
-    return this.http.post(url, payload, { headers: this.header });
+  createAddress(payload: {
+    addressLineOne: string,
+    cityName: string,
+    stateName: string,
+    countryName: string,
+    pincode: string,
+  }) {
+    const url: string = `${baseUrl}address`;
+    return this.http.post<BusinessResponseModel>(url, payload, { headers: this.header });
   }
 
-  sendMessageViaWhatsapp(invoiceNumber: string) {
-    const url: string = `${baseUrl}message`;
-    return this.http.post(url, { invoiceNumber: invoiceNumber }, { headers: this.header });
+  getAddress(id: string) {
+    const url: string = `${baseUrl}client/address/${id}`;
+    return this.http.get<BusinessResponseModel>(url, { headers: this.header });
+  }
+
+  updateAddress(addressId: string, payload: object) {
+    const url: string = `${baseUrl}address/${addressId}`;
+    return this.http.put(url, payload, { headers: this.header });
+  }
+
+  connectClientAddress(clientId: string, addressId: string) {
+    const url: string = `${baseUrl}client/address`;
+    return this.http.post<BusinessResponseModel>(url, { clientId: clientId, addressId: addressId }, { headers: this.header });
+  }
+
+  getCountries() {
+    const url: string = `${baseUrl}countries`;
+    return this.http.get<ResponseModel>(url, { headers: this.header });
+  }
+
+  getStates(selectedCountryId: number) {
+    const url: string = `${baseUrl}states/${selectedCountryId}`;
+    return this.http.get<ResponseModel>(url, { headers: this.header });
+  }
+
+  getCities(selectedStateId: number) {
+    const url: string = `${baseUrl}cities/${selectedStateId}`;
+    return this.http.get<ResponseModel>(url, { headers: this.header });
+  }
+
+  getClientIndustry() {
+    const url: string = `${baseUrl}industry`;
+    return this.http.get<ResponseModel>(url, { headers: this.header });
+  }
+
+  createClient(payload: CreateClientModel) {
+    const url: string = `${baseUrl}client`;
+    return this.http.post<ClientResponseModel>(url, payload, { headers: this.header });
+  }
+
+  updateClient(clientId: string, payload: object) {
+    const url: string = `${baseUrl}client/${clientId}`;
+    return this.http.put(url, payload, { headers: this.header });
+  }
+
+  sendMessageViaWhatsapp(invoiceNumber: string, download: boolean = false) {
+    const query = `isDownload=${download}`
+    const url: string = `${baseUrl}message?${query}`;
+    return this.http.post<{ message: string, code: number, data: string }>(url, { invoiceNumber: invoiceNumber }, { headers: this.header });
   }
 
   getBusiness(businessId: string) {
@@ -41,6 +94,11 @@ export class ApiService {
   getClient(clientId: string) {
     const url: string = `${baseUrl}client/${clientId}`;
     return this.http.get<ClientResponseModel>(url, { headers: this.header });
+  }
+
+  deleteClient(clientId: string) {
+    const url: string = `${baseUrl}client/${clientId}`;
+    return this.http.delete(url, { headers: this.header });
   }
 
   getAllClients() {
@@ -110,5 +168,15 @@ export class ApiService {
       next: (value) => {},
       error: (err) => {},
     });
+  }
+
+  updateTaxes(invoiceTaxId: string, payload: { taxName: string, taxPercentage: number }) {
+    const url: string = `${baseUrl}tax/${invoiceTaxId}`;
+    return this.http.put(url, payload, { headers: this.header });
+  }
+
+  deleteTaxes(invoiceTaxId: string) {
+    const url: string = `${baseUrl}tax/${invoiceTaxId}`;
+    return this.http.delete(url, { headers: this.header });
   }
 }

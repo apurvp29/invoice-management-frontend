@@ -11,18 +11,26 @@ import { ApiService } from '../api.service';
 export class ConfirmComponent {
   @Output() visibilityChild = new EventEmitter<boolean>();
   @Input() invoiceId!: string;
-  constructor(
-    private apiService: ApiService
-  ) {}
+  @Input() clientId!: string;
+
+  constructor(private apiService: ApiService) {}
 
   onCancel() {
     this.visibilityChild.emit(false);
   }
 
   onDelete() {
-    this.apiService.deleteInvoice(this.invoiceId).subscribe({
-      next: (value) => {},
-    });
-    this.visibilityChild.emit(false);
+    if (this.invoiceId) {
+      this.apiService.deleteInvoice(this.invoiceId).subscribe({
+        next: (value) => {},
+      });
+      this.visibilityChild.emit(false);
+    }
+    if (this.clientId) {
+      this.apiService.deleteClient(this.clientId).subscribe({
+        next: (value) => {},
+      });
+      this.visibilityChild.emit(false);
+    }
   }
 }

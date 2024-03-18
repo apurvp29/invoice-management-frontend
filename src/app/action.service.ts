@@ -5,6 +5,6 @@ import { Subject } from 'rxjs';
 export class ActionService {
   visibilitySubject = new Subject<boolean>();
   deleteInvoiceId = new Subject<string>();
-  editInvoice = new Subject<string>();
-  toggleSidebar = new Subject<boolean>();
+  deleteClientId = new Subject<string>();
+  visibilityClient = new Subject<boolean>();
 }
